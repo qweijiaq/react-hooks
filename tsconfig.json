@@ -1,25 +1,26 @@
 {
   "root": true,
   "compilerOptions": {
-    "target": "ES5",
-    "moduleResolution": "node",
-    "lib": ["ESNext", "dom"],
-    "jsx": "react",
-    "esModuleInterop": true,
-    "downlevelIteration": true,
-    "sourceMap": true,
-    "baseUrl": ".",
+    "target": "ES5", // 编译后的 JavaScript 目标版本
+    "moduleResolution": "node", // 模块解析策略
+    "lib": ["ESNext", "dom"], // 编译过程中可用的库文件
+    "jsx": "react", // JSX 语法的处理方式
+    "esModuleInterop": true, // 支持 CommonJS 模块和 ES 模块之间的默认导出和命名空间导入
+    "downlevelIteration": true, // 降级迭代器
+    "sourceMap": true, // 生成源映射文件
+    "baseUrl": ".", // 解析非相对模块名的基目录
     "paths": {
-      "@/*": ["src/*"],
-      "wjReactHooks": ["./packages/hooks/src/index.ts"],
-      "wj-react-hooks": ["./packages/hooks/src/index.ts"],
-      "wjReactHooks/lib/*": ["./packages/hooks/src/*"],
-      "wj-react-hooks/lib/*": ["./packages/hooks/src/*"]
+      // 模块路径映射
+      "@/*": ["src/*"], // @/* 模块路径映射到 src/* 目录
+      "wjReactHooks": ["./packages/hooks/src/index.ts"], // wjReactHooks 模块路径映射到 ./packages/hooks/src/index.ts 文件
+      "wj-react-hooks": ["./packages/hooks/src/index.ts"], // wj-react-hooks 模块路径映射到 ./packages/hooks/src/index.ts 文件
+      "wjReactHooks/lib/*": ["./packages/hooks/src/*"], // wjReactHooks/lib/* 模块路径映射到 ./packages/hooks/src/* 目录
+      "wj-react-hooks/lib/*": ["./packages/hooks/src/*"] // wj-react-hooks/lib/* 模块路径映射到 ./packages/hooks/src/* 目录
     },
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
-    "strictNullChecks": true,
-    "importHelpers": true
+    "allowSyntheticDefaultImports": true, // 允许从没有设置默认导出的模块中默认导入
+    "skipLibCheck": true, // 跳过声明文件的类型检查
+    "strictNullChecks": true, // 启用严格的空检查
+    "importHelpers": true // 在输出文件中生成辅助函数而不是复制它们
   },
-  "exclude": ["node_modules", "lib", "es", "dist", "example"]
+  "exclude": ["node_modules", "lib", "es", "dist", "example"] // 排除的目录列表
 }

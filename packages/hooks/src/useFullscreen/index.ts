@@ -17,19 +17,27 @@ export interface Options {
   pageFullscreen?: boolean | PageFullscreenOptions;
 }
 
+/**
+ * 自定义 Hook，用于管理全屏状态及处理全屏事件
+ * @param target 目标元素，全屏操作将针对该元素进行
+ * @param options 配置选项，包括进入/退出全屏时的回调函数和页面全屏选项
+ */
 const useFullscreen = (target: BasicTarget, options?: Options) => {
+  // 从配置选项中解构进入/退出全屏时的回调函数和页面全屏选项
   const { onExit, onEnter, pageFullscreen = false } = options || {};
+  // 从页面全屏选项中解构类名和层级
   const { className = 'hooks-page-fullscreen', zIndex = 999999 } =
     isBoolean(pageFullscreen) || !pageFullscreen ? {} : pageFullscreen;
 
+  // 使用 useLatest Hook 创建保存进入/退出全屏时的回调函数的引用
   const onExitRef = useLatest(onExit);
   const onEnterRef = useLatest(onEnter);
 
-  // The state of full screen may be changed by other scripts/components,
-  // so the initial value needs to be computed dynamically.
+  // 使用 useRef Hook 创建保存全屏状态的引用，并根据当前状态动态初始化
   const [state, setState] = useState(getIsFullscreen);
   const stateRef = useRef(getIsFullscreen());
 
+  // 获取当前全屏状态的函数
   function getIsFullscreen() {
     return (
       screenfull.isEnabled &&
@@ -38,6 +46,7 @@ const useFullscreen = (target: BasicTarget, options?: Options) => {
     );
   }
 
+  // 调用回调函数的函数
   const invokeCallback = (fullscreen: boolean) => {
     if (fullscreen) {
       onEnterRef.current?.();
@@ -46,8 +55,9 @@ const useFullscreen = (target: BasicTarget, options?: Options) => {
     }
   };
 
+  // 更新全屏状态的函数
   const updateFullscreenState = (fullscreen: boolean) => {
-    // Prevent repeated calls when the state is not changed.
+    // 防止在状态未改变时重复调用
     if (stateRef.current !== fullscreen) {
       invokeCallback(fullscreen);
       setState(fullscreen);
@@ -55,12 +65,13 @@ const useFullscreen = (target: BasicTarget, options?: Options) => {
     }
   };
 
+  // 全屏状态变化时的回调函数
   const onScreenfullChange = () => {
     const fullscreen = getIsFullscreen();
-
     updateFullscreenState(fullscreen);
   };
 
+  // 切换页面全屏状态的函数
   const togglePageFullscreen = (fullscreen: boolean) => {
     const el = getTargetElement(target);
     if (!el) {
@@ -97,6 +108,7 @@ const useFullscreen = (target: BasicTarget, options?: Options) => {
     updateFullscreenState(fullscreen);
   };
 
+  // 进入全屏的函数
   const enterFullscreen = () => {
     const el = getTargetElement(target);
     if (!el) {
@@ -117,6 +129,7 @@ const useFullscreen = (target: BasicTarget, options?: Options) => {
     }
   };
 
+  // 退出全屏的函数
   const exitFullscreen = () => {
     const el = getTargetElement(target);
     if (!el) {
@@ -132,6 +145,7 @@ const useFullscreen = (target: BasicTarget, options?: Options) => {
     }
   };
 
+  // 切换全屏状态的函数
   const toggleFullscreen = () => {
     if (state) {
       exitFullscreen();
@@ -140,6 +154,7 @@ const useFullscreen = (target: BasicTarget, options?: Options) => {
     }
   };
 
+  // 监听全屏状态变化的副作用
   useEffect(() => {
     if (!screenfull.isEnabled || pageFullscreen) {
       return;
@@ -153,6 +168,7 @@ const useFullscreen = (target: BasicTarget, options?: Options) => {
     };
   }, []);
 
+  // 返回全屏状态及处理全屏事件的回调函数
   return [
     state,
     {

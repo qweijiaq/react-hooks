@@ -1,7 +1,7 @@
 export const menus = [
   {
     title: '生命周期',
-    children: ['useUnmount', 'useUnmountedRef'],
+    children: ['useMount', 'useUnmount', 'useUnmountedRef', 'useUpdate'],
   },
   {
     title: '请求',
@@ -57,6 +57,7 @@ export const menus = [
       'useMouse',
       'useKeyPress',
       'useMutationObserver',
+      'useRafState',
       'useResponsive',
       'useScroll',
       'useSize',
@@ -65,6 +66,6 @@ export const menus = [
   },
   {
     title: '进阶',
-    children: ['useLatest', 'useMemoizedFn'],
+    children: ['useCreation', 'useLatest', 'useMemoizedFn'],
   },
 ];

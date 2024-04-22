@@ -220,25 +220,39 @@ function genKeyFormatter(keyFilter: KeyFilter, exactMatch: boolean): KeyPredicat
 
 const defaultEvents: KeyEvent[] = ['keydown'];
 
+/**
+ * 自定义 Hook，用于监听键盘按键事件，并根据指定的按键过滤条件和事件处理函数进行处理。
+ * @param keyFilter 按键过滤条件，可以是单个按键字符串、按键数组或自定义过滤函数
+ * @param eventHandler 键盘事件处理函数，接收键盘事件对象和触发的按键作为参数
+ * @param option 可选项，包含 events、target、exactMatch 和 useCapture 四个属性
+ */
 function useKeyPress(
-  keyFilter: KeyFilter,
-  eventHandler: (event: KeyboardEvent, key: KeyType) => void,
-  option?: Options,
+  keyFilter: KeyFilter, // 按键过滤条件
+  eventHandler: (event: KeyboardEvent, key: KeyType) => void, // 键盘事件处理函数
+  option?: Options, // 可选项
 ) {
+  // 从 option 中提取 events、target、exactMatch 和 useCapture 属性，使用默认值或空对象进行处理
   const { events = defaultEvents, target, exactMatch = false, useCapture = false } = option || {};
+  // 创建事件处理函数的引用和按键过滤条件的引用
   const eventHandlerRef = useLatest(eventHandler);
   const keyFilterRef = useLatest(keyFilter);
 
+  // 使用深比较 useEffectWithTarget 来监听事件和目标元素的变化，并执行相应的事件处理逻辑
   useDeepCompareEffectWithTarget(
     () => {
+      // 获取目标元素的引用或选择器字符串，并将其转换为引用形式
       const el = getTargetElement(target, window);
+      // 如果目标元素不存在，则直接返回
       if (!el) {
         return;
       }
 
+      // 定义回调处理函数，根据过滤条件处理键盘事件并调用事件处理函数
       const callbackHandler = (event: KeyboardEvent) => {
+        // 生成按键过滤函数并进行匹配
         const genGuard = genKeyFormatter(keyFilterRef.current, exactMatch);
         const keyGuard = genGuard(event);
+        // 如果匹配成功，则调用事件处理函数
         const firedKey = isValidKeyType(keyGuard) ? keyGuard : event.key;
 
         if (keyGuard) {
@@ -246,17 +260,20 @@ function useKeyPress(
         }
       };
 
+      // 遍历事件数组，为目标元素添加键盘事件监听器
       for (const eventName of events) {
         el?.addEventListener?.(eventName, callbackHandler, useCapture);
       }
+      // 返回清除监听器的函数，确保在组件卸载时执行
       return () => {
         for (const eventName of events) {
           el?.removeEventListener?.(eventName, callbackHandler, useCapture);
         }
       };
     },
+    // 当事件数组发生变化时重新执行 useEffectWithTarget
     [events],
-    target,
+    target, // 监听目标元素的变化
   );
 }
 

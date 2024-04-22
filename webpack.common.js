@@ -1,25 +1,16 @@
 module.exports = {
   output: {
-    libraryTarget: 'umd',
-    globalObject: 'this',
+    libraryTarget: 'umd', // 输出的库目标类型为通用模块定义
+    globalObject: 'this', // 全局对象为 this
   },
-  mode: 'production',
+  mode: 'production', // 生产模式
   resolve: {
-    extensions: ['.json', '.js'],
+    extensions: ['.json', '.js'], // 解析文件时自动解析的扩展名
   },
-  // module: {
-  //   rules: [
-  //     {
-  //       test: /\.jsx?$/,
-  //       use: {
-  //         loader: 'babel-loader',
-  //       },
-  //     }
-  //   ],
-  // },
   externals: [
+    // 外部依赖配置，不打包到库中
     {
-      react: 'React',
+      react: 'React', // 将 react 包外部化，不打包到库中，由外部环境提供 React
     },
   ],
 };

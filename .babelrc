@@ -1,4 +1,4 @@
 {
   "presets": [["@babel/env"], "@babel/react"],
-  "plugins": ["@babel/plugin-transform-runtime"]
+  "plugins": ["@babel/plugin-transform-runtime"] // 防止 dumi 报错
 }
